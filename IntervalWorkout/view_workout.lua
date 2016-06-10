@@ -8,7 +8,7 @@ local composer = require( "composer" )
 local ixdata = require( "ixdatadef" )
 local scene = composer.newScene()
 local title
-local startButton
+
 
 local workoutTimeManager = 
 {
@@ -35,15 +35,54 @@ local workoutTimeManager =
   
 } 
 
-local function startButtonEvent( event )
-    if ( "ended" == event.phase ) then
-        print( "Button was pressed and released" )
+
+--CENTER BUTTON BLOCK BEGIN
+local startButton = nil
+
+local initStartButton
+local deinitStartButton
+
+local function startTimerEvent( event )
+    if ( "ended" == event.phase and startButton.buttonState == "start") then
+        print( "Button was pressed and released in start state" )
         workoutTimeManager.timerCurrentExercise = timer.performWithDelay( 
-        workoutTimeManager.timerCurrentExerciseRefreshInterval, 
-        workoutTimeManager.timerCurrentExerciseCallback , 
-        0)
+          workoutTimeManager.timerCurrentExerciseRefreshInterval, 
+          workoutTimeManager.timerCurrentExerciseCallback , 0) 
+        startButton:setLabel("stop")
+        startButton.buttonState = "stop"
+    elseif ( "ended" == event.phase and startButton.buttonState == "stop") then
+        print( "Button was pressed and released in stop state" )
+        deinitStartButton()
+        startButton:setLabel("start")
     end
 end
+
+
+initStartButton = function ()
+  print( "initStartButton" )
+  startButton = widget.newButton(
+      {
+          x = display.contentWidth * 0.5,
+          y = display.contentHeight - 100,
+          id = "button1",
+          label = "Default",
+          onEvent = startTimerEvent,
+          shape = "rect",
+          fillColor = { default={ 0.7, 0.7, 0.7, 1 }, over={ 1, 0.2, 0.5, 1 } },
+          
+      }
+    )
+  startButton.buttonState = "start"
+end
+
+deinitStartButton = function()
+  if workoutTimeManager.timerCurrentExercise ~= nil then
+        timer.cancel(workoutTimeManager.timerCurrentExercise)
+        workoutTimeManager.timerCurrentExercise = nil
+      end
+end
+
+--CENTER BUTTON BLOCK END
 
  
 function scene:create( event )
@@ -89,18 +128,8 @@ function scene:show( event )
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
-    startButton = widget.newButton(
-    {
-        left = display.contentWidth * 0.5,
-        top = display.contentHeight - 100,
-        id = "button1",
-        label = "Default",
-        onEvent = startButtonEvent,
-        shape = "rect",
-        fillColor = { default={ 0.7, 0.7, 0.7, 1 }, over={ 1, 0.2, 0.5, 1 } }
-    }
-    )
-     
+    
+    initStartButton()
     
 		-- Called when the scene is now on screen
 		-- 
@@ -114,10 +143,7 @@ function scene:hide( event )
 	local phase = event.phase
 	
 	if event.phase == "will" then
-    if workoutTimeManager.timerCurrentExercise ~= nil then
-      timer.cancel(workoutTimeManager.timerCurrentExercise)
-      workoutTimeManager.timerCurrentExercise = nil
-    end
+    deinitStartButton()
 		-- Called when the scene is on screen and is about to move off screen
 		--
 		-- INSERT code here to pause the scene
