@@ -23,13 +23,15 @@ local workoutTimeManager =
     end, 
     
   init = function () 
-    timerCurrentExerciseRefreshInterval = 66, 
-    timerCurrentExerciseTarget = 30000, 
-    timerCurrentExerciseCurrent = 0, 
+    timerCurrentExerciseRefreshInterval = 66
+    timerCurrentExerciseTarget = 30000
+    timerCurrentExerciseCurrent = 0
     if not timerCurrentExercise then
       timerCurrentExercise.cancel()
       
     end
+  end
+  
 } 
 
  
@@ -76,6 +78,10 @@ function scene:show( event )
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
+    workoutTimeManager.timerCurrentExercise = timer.performWithDelay( 
+      workoutTimeManager.timerCurrentExerciseRefreshInterval, 
+      workoutTimeManager.timerCurrentExerciseCallback , 
+      0)
 		-- Called when the scene is now on screen
 		-- 
 		-- INSERT code here to make the scene come alive
@@ -88,12 +94,14 @@ function scene:hide( event )
 	local phase = event.phase
 	
 	if event.phase == "will" then
+    timer.cancel(workoutTimeManager.timerCurrentExercise)
 		-- Called when the scene is on screen and is about to move off screen
 		--
 		-- INSERT code here to pause the scene
 		-- e.g. stop timers, stop animation, unload sounds, etc.)
     timer.cancel( workoutTimeManager.timerCurrentExercise)
 	elseif phase == "did" then
+
 		-- Called when the scene is now off screen
 	end
 end
@@ -107,20 +115,10 @@ function scene:destroy( event )
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
 end
 
----------------------------------------------------------------------------------
-
 -- Listener setup
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
-
-
-workoutTimeManager.timerCurrentExercise = timer.performWithDelay( 
-  workoutTimeManager.timerCurrentExerciseRefreshInterval, 
-  workoutTimeManager.timerCurrentExerciseCallback , 
-  0)
-
------------------------------------------------------------------------------------------
 
 return scene
