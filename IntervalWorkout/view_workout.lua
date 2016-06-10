@@ -3,16 +3,17 @@
 -- view1.lua
 --
 -----------------------------------------------------------------------------------------
-
+local widget = require "widget"
 local composer = require( "composer" )
 local ixdata = require( "ixdatadef" )
 local scene = composer.newScene()
 local title
+local startButton
 
 local workoutTimeManager = 
 {
   --exercise timer
-  timerCurrentExercise = {},
+  timerCurrentExercise = nil,
   timerCurrentExerciseRefreshInterval = 66, 
   timerCurrentExerciseTarget = 30000, 
   timerCurrentExerciseCurrent = 0, 
@@ -34,10 +35,20 @@ local workoutTimeManager =
   
 } 
 
+local function startButtonEvent( event )
+    if ( "ended" == event.phase ) then
+        print( "Button was pressed and released" )
+        workoutTimeManager.timerCurrentExercise = timer.performWithDelay( 
+        workoutTimeManager.timerCurrentExerciseRefreshInterval, 
+        workoutTimeManager.timerCurrentExerciseCallback , 
+        0)
+    end
+end
+
  
 function scene:create( event )
 	local sceneGroup = self.view
-	
+
 	-- Called when the scene's view does not exist.
 	-- 
 	-- INSERT code here to initialize the scene
@@ -78,10 +89,19 @@ function scene:show( event )
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
-    workoutTimeManager.timerCurrentExercise = timer.performWithDelay( 
-      workoutTimeManager.timerCurrentExerciseRefreshInterval, 
-      workoutTimeManager.timerCurrentExerciseCallback , 
-      0)
+    startButton = widget.newButton(
+    {
+        left = display.contentWidth * 0.5,
+        top = display.contentHeight - 100,
+        id = "button1",
+        label = "Default",
+        onEvent = startButtonEvent,
+        shape = "rect",
+        fillColor = { default={ 0.7, 0.7, 0.7, 1 }, over={ 1, 0.2, 0.5, 1 } }
+    }
+    )
+     
+    
 		-- Called when the scene is now on screen
 		-- 
 		-- INSERT code here to make the scene come alive
@@ -94,12 +114,14 @@ function scene:hide( event )
 	local phase = event.phase
 	
 	if event.phase == "will" then
-    timer.cancel(workoutTimeManager.timerCurrentExercise)
+    if workoutTimeManager.timerCurrentExercise ~= nil then
+      timer.cancel(workoutTimeManager.timerCurrentExercise)
+      workoutTimeManager.timerCurrentExercise = nil
+    end
 		-- Called when the scene is on screen and is about to move off screen
 		--
 		-- INSERT code here to pause the scene
-		-- e.g. stop timers, stop animation, unload sounds, etc.)
-    timer.cancel( workoutTimeManager.timerCurrentExercise)
+		-- e.g. stop timers, stop animation, unload sounds, etc.) 
 	elseif phase == "did" then
 
 		-- Called when the scene is now off screen
