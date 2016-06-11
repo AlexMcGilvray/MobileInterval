@@ -32,13 +32,11 @@ local workoutTimeManager =
       
     end
   end
-  
 } 
 
 
 --CENTER BUTTON BLOCK BEGIN
 local startButton = nil
-
 local initStartButton
 local deinitStartButton
 
@@ -57,7 +55,6 @@ local function startTimerEvent( event )
     end
 end
 
-
 initStartButton = function ()
   print( "initStartButton" )
   startButton = widget.newButton(
@@ -65,11 +62,12 @@ initStartButton = function ()
           x = display.contentWidth * 0.5,
           y = display.contentHeight - 100,
           id = "button1",
-          label = "Default",
+          label = "Start",
           onEvent = startTimerEvent,
           shape = "rect",
-          fillColor = { default={ 0.7, 0.7, 0.7, 1 }, over={ 1, 0.2, 0.5, 1 } },
-          
+          fillColor = { default={ 0.6, 0.6, 0.6, 1 }, over={ 1, 0.2, 0.5, 1 } },
+          labelColor = { default={ 0.1, 0.1, 0.1 }, over={ 0, 0, 0, 0.5 } },
+          fontSize = 24
       }
     )
   startButton.buttonState = "start"
@@ -94,31 +92,31 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 	
 	-- create a white background to fill screen
-	local bg = display.newRect( 0, 0, display.contentWidth, display.contentHeight )
-	bg.anchorX = 0
-	bg.anchorY = 0
-	bg:setFillColor( 1 )	-- white
+--	local bg = display.newRect( 0, 0, display.contentWidth, display.contentHeight )
+--	bg.anchorX = 0
+--	bg.anchorY = 0
+--	bg:setFillColor( 1 )	-- white
 	
 	-- create some text
   title = display.newText( IXExercise_Pushups.name, 0, 0, native.systemFont, 32 )
-	title:setFillColor( 0 )	-- black
+	title:setFillColor( 1 )	-- black
 	title.x = display.contentWidth * 0.5
 	title.y = 125
 	
-	local newTextParams = { text = "Loaded by the first tab's\n\"onPress\" listener\nspecified in the 'tabButtons' table", 
-						x = 0, y = 0, 
-						width = 310, height = 310, 
-						font = native.systemFont, fontSize = 14, 
-						align = "center" }
-	local summary = display.newText( newTextParams )
-	summary:setFillColor( 0 ) -- black
-	summary.x = display.contentWidth * 0.5 + 10
-	summary.y = title.y + 215
+--	local newTextParams = { text = "Loaded by the first tab's\n\"onPress\" listener\nspecified in the 'tabButtons' table", 
+--						x = 0, y = 0, 
+--						width = 310, height = 310, 
+--						font = native.systemFont, fontSize = 14, 
+--						align = "center" }
+--	local summary = display.newText( newTextParams )
+--	summary:setFillColor( 0 ) -- black
+--	summary.x = display.contentWidth * 0.5 + 10
+--	summary.y = title.y + 215
 	
 	-- all objects must be added to group (e.g. self.view)
-	sceneGroup:insert( bg )
+	--sceneGroup:insert( bg )
 	sceneGroup:insert( title )
-	sceneGroup:insert( summary )
+	--sceneGroup:insert( summary )
 end
 
 function scene:show( event )
