@@ -35,6 +35,33 @@ local workoutTimeManager =
 } 
 
 
+--CIRCLE TIMER WIDGET BLOCK BEGIN
+local circleWidget
+
+initCircleWidget = function (sceneGroup)
+  print( "initCircleWidget" )
+  circleWidget = widget.newButton(
+      {
+          x = display.contentWidth * 0.5,
+          y =  300,
+          id = "button1",
+          label = "Start",
+          onEvent = startTimerEvent,
+          shape = "circle",
+          radius = 125,
+          fillColor = { default={ 0.6, 0.6, 0.6, 1 }, over={ 1, 0.2, 0.5, 1 } },
+          labelColor = { default={ 0.1, 0.1, 0.1 }, over={ 0, 0, 0, 0.5 } },
+          fontSize = 24
+      }
+    ) 
+  
+  sceneGroup:insert( circleWidget )
+  
+  circleWidget.buttonState = "start" 
+  transition.to( circleWidget, {time = 2000, alpha = 1, xScale = 2, yScale = 2})
+end
+--CIRCLE TIMER WIDGET BLOCK END
+
 --CENTER BUTTON BLOCK BEGIN
 local startButton = nil
 local initStartButton
@@ -102,7 +129,10 @@ function scene:create( event )
 	title:setFillColor( 1 )	-- black
 	title.x = display.contentWidth * 0.5
 	title.y = 125
-	
+	sceneGroup:insert( title )
+  
+      initStartButton()
+    initCircleWidget(sceneGroup)
 --	local newTextParams = { text = "Loaded by the first tab's\n\"onPress\" listener\nspecified in the 'tabButtons' table", 
 --						x = 0, y = 0, 
 --						width = 310, height = 310, 
@@ -115,7 +145,7 @@ function scene:create( event )
 	
 	-- all objects must be added to group (e.g. self.view)
 	--sceneGroup:insert( bg )
-	sceneGroup:insert( title )
+	
 	--sceneGroup:insert( summary )
 end
 
@@ -127,7 +157,7 @@ function scene:show( event )
 		-- Called when the scene is still off screen and is about to move on screen
 	elseif phase == "did" then
     
-    initStartButton()
+
     
 		-- Called when the scene is now on screen
 		-- 
