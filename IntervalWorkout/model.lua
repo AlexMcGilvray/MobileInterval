@@ -1,4 +1,20 @@
 
+ExNames = 
+{
+  Pushups = "Pushups",
+  Situps = "Situps",
+  JumpingJacks = "JumpingJacks",
+  WallSit = "WallSit",
+  Squats = "Squats"
+}
+
+ExCategories = 
+{
+  UpperBody = "Upper Body",
+  Core = "Core",
+  Cardio = "Cardio"
+}
+
 Exercise = 
 {
   newExercise = function(name, category, duration)
@@ -27,3 +43,11 @@ Workout =
 --  name = "unammed"
 }
 
+WorkoutFactory =
+{
+  exPushups = Exercise.newExercise(ExNames.Pushups,ExCategories.UpperBody,30),
+ 
+  newBasicWorkout = function()
+    local exPushups = exPushups
+  end
+}

@@ -6,9 +6,11 @@
 local widget = require "widget"
 local composer = require( "composer" )
 local ixdata = require( "ixdatadef" )
+require "model"
 local scene = composer.newScene()
 local title
 
+exercise = Exercise.newExercise("x","xx",10)
 
 local workoutTimeManager = 
 {
