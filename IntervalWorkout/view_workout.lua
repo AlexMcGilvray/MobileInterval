@@ -40,25 +40,40 @@ local circleWidget
 
 initCircleWidget = function (sceneGroup)
   print( "initCircleWidget" )
-  circleWidget = widget.newButton(
-      {
-          x = display.contentWidth * 0.5,
-          y =  300,
-          id = "button1",
-          label = "Start",
-          onEvent = startTimerEvent,
-          shape = "circle",
-          radius = 125,
-          fillColor = { default={ 0.6, 0.6, 0.6, 1 }, over={ 1, 0.2, 0.5, 1 } },
-          labelColor = { default={ 0.1, 0.1, 0.1 }, over={ 0, 0, 0, 0.5 } },
-          fontSize = 24
-      }
+--  circleWidget = widget.newButton(
+--      {
+--          x = display.contentWidth * 0.5,
+--          y =  300,
+--          id = "button1",
+--          label = "Start",
+--          onEvent = startTimerEvent,
+--          shape = "circle",
+--          radius = 125,
+--          fillColor = { default={ 0.6, 0.6, 0.6, 1 }, over={ 1, 0.2, 0.5, 1 } },
+--          labelColor = { default={ 0.1, 0.1, 0.1 }, over={ 0, 0, 0, 0.5 } },
+--          fontSize = 24
+--      }
+--    ) 
+  
+  circleWidget = display.newCircle( 
+           display.contentWidth * 0.5,
+           300,
+            25 
     ) 
-  
+  circleWidget.strokeWidth = 1
+  circleWidget:setStrokeColor( 1, 0, 0 )
   sceneGroup:insert( circleWidget )
-  
-  circleWidget.buttonState = "start" 
-  transition.to( circleWidget, {time = 2000, alpha = 1, xScale = 2, yScale = 2})
+  transition.to( circleWidget.path, {
+    time = 500,
+    radius = 280})
+
+
+--  circleWidget.buttonState = "start" 
+--  transition.to( circleWidget, {
+--      time = 2000,  
+--      xScale = 2, 
+--      yScale = 2,
+--      fillColor = { default={ 0.6, 0.6, 0.6, 1 }, over={ 1, 0.2, 0.5, 1 } } })
 end
 --CIRCLE TIMER WIDGET BLOCK END
 
@@ -125,14 +140,16 @@ function scene:create( event )
 --	bg:setFillColor( 1 )	-- white
 	
 	-- create some text
-  title = display.newText( IXExercise_Pushups.name, 0, 0, native.systemFont, 32 )
+  
+  
+      initStartButton()
+    initCircleWidget(sceneGroup)
+    title = display.newText( IXExercise_Pushups.name, 0, 0, native.systemFont, 32 )
+    
 	title:setFillColor( 1 )	-- black
 	title.x = display.contentWidth * 0.5
 	title.y = 125
 	sceneGroup:insert( title )
-  
-      initStartButton()
-    initCircleWidget(sceneGroup)
 --	local newTextParams = { text = "Loaded by the first tab's\n\"onPress\" listener\nspecified in the 'tabButtons' table", 
 --						x = 0, y = 0, 
 --						width = 310, height = 310, 
